@@ -14,15 +14,33 @@ dependencies {
     implementation 'org.telegram:telegrambots-meta:6.7.0'
 }
 
+// Fat JAR
 task fatJar(type: Jar) {
-    group = "build"
-    description = "Builds a fat JAR with all dependencies"
+    group = 'build'
+    description = 'Собирает fat JAR со всеми зависимостями'
+
+    archiveBaseName.set('Tg.Bot')
+    archiveVersion.set('1.0-SNAPSHOT')
+    archiveClassifier.set('all')
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
     manifest {
-        attributes 'Main-Class': 'Bot'
+        attributes(
+                'Main-Class': 'Bot' // если класс в пакете, укажи полный путь, например 'com.example.Bot'
+        )
     }
+
+    // Основной код проекта
+    from(sourceSets.main.output)
+
+    // Все зависимости добавляем как zipTree, чтобы попали внутрь JAR
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE // <-- эта строчка решает проблему
-    with jar
+}
+
+// Чтобы сборка всегда собирала fatJar
+tasks.build {
+    dependsOn fatJar
 }
