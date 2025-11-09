@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id 'application'
 }
 
 group 'com.example'
@@ -15,24 +14,28 @@ dependencies {
     implementation 'org.telegram:telegrambots-meta:6.7.0'
 }
 
-application {
-    // Твой главный класс с методом main
-    mainClass = 'Bot'
+// Настройка основного jar с manifest
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'Bot' // <-- если у тебя класс в пакете, укажи полный путь, например 'com.example.Bot'
+        )
+    }
 }
 
-// Задача для сборки fat JAR со всеми зависимостями
+// Fat JAR с зависимостями
 task fatJar(type: Jar) {
-    group = "build"
-    description = "Builds a fat JAR with all dependencies"
+    archiveClassifier.set('all')
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
     manifest {
-        attributes 'Main-Class': 'Bot'
+        attributes(
+                'Main-Class': 'Bot' // <-- если есть пакет, полный путь
+        )
     }
+
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
     with jar
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
-
-// Чтобы собирать fatJar командой
-build.dependsOn fatJar
