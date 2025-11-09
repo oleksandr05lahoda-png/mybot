@@ -29,13 +29,13 @@ public class Bot extends TelegramLongPollingBot {
 
     // ====== Пути к фотографиям в resources ======
     private final Map<String, String> mirrorPhotos = new HashMap<>() {{
-        put("Маорі", "/temp_Маорі.jpg");
-        put("Веста", "/temp_Веста.jpg");
-        put("Мейв", "/temp_Мейв.jpg");
-        put("Орнамент", "/temp_Орнамент.jpg");
-        put("Пафос", "/temp_Пафос.jpg");
-        put("Стеліо", "/temp_Стеліо.jpg");
-        put("Шане", "/temp_Шане.jpg");
+        put("Маорі", "/MAORI.png");
+        put("Веста", "/VESTA.png");
+        put("Мейв", "/MEIV.png");
+        put("Орнамент", "/ORNAMENT.png");
+        put("Пафос", "/PAFOS.png");
+        put("Стеліо", "/STELIO.png");
+        put("Шане", "/SHANE.png");
     }};
 
     // ====== Пользователи ======
