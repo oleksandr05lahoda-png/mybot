@@ -18,24 +18,32 @@ dependencies {
 jar {
     manifest {
         attributes(
-                'Main-Class': 'Bot' // <-- если у тебя класс в пакете, укажи полный путь, например 'com.example.Bot'
+                'Main-Class': 'Bot' // или 'com.example.Bot' если есть пакет
         )
     }
 }
 
 // Fat JAR с зависимостями
 task fatJar(type: Jar) {
+    archiveBaseName.set('Tg.Bot')
+    archiveVersion.set('1.0-SNAPSHOT')
     archiveClassifier.set('all')
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     manifest {
         attributes(
-                'Main-Class': 'Bot' // <-- если есть пакет, полный путь
+                'Main-Class': 'Bot' // или 'com.example.Bot'
         )
     }
 
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
+
     with jar
+}
+
+// Чтобы Railway всегда собирал fatJar первым
+tasks.build {
+    dependsOn fatJar
 }
