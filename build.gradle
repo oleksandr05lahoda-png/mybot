@@ -14,11 +14,11 @@ dependencies {
     implementation 'org.telegram:telegrambots-meta:6.7.0'
 }
 
-// Настройка основного jar с manifest
+// Основной jar с manifest
 jar {
     manifest {
         attributes(
-                'Main-Class': 'Bot' // <-- если класс в пакете, например com.example, то 'com.example.Bot'
+                'Main-Class': 'Bot' // <-- если класс в пакете, укажи полный путь, например 'com.example.Bot'
         )
     }
 }
@@ -32,7 +32,7 @@ task fatJar(type: Jar) {
 
     manifest {
         attributes(
-                'Main-Class': 'Bot' // <-- если есть пакет, полный путь
+                'Main-Class': 'Bot' // или 'com.example.Bot', если есть пакет
         )
     }
 
@@ -43,7 +43,8 @@ task fatJar(type: Jar) {
     with jar
 }
 
-// Чтобы build всегда собирал fatJar
+
+// Сделать так, чтобы Railway собирал fatJar
 tasks.build {
     dependsOn fatJar
 }
