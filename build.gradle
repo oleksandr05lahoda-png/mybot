@@ -28,6 +28,7 @@ task fatJar(type: Jar) {
     archiveBaseName.set('Tg.Bot')
     archiveVersion.set('1.0-SNAPSHOT')
     archiveClassifier.set('all')
+
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     manifest {
@@ -36,15 +37,19 @@ task fatJar(type: Jar) {
         )
     }
 
+    // Берём основной jar
+    from sourceSets.main.output
+
+    // Добавляем все зависимости
+    dependsOn configurations.runtimeClasspath
     from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.runtimeClasspath.filter { it.name.endsWith('jar') }.collect { zipTree(it) }
     }
 
     with jar
 }
 
-
-// Сделать так, чтобы Railway собирал fatJar
+// Чтобы Railway собирал fatJar первым
 tasks.build {
     dependsOn fatJar
 }
