@@ -18,38 +18,29 @@ dependencies {
 jar {
     manifest {
         attributes(
-                'Main-Class': 'Bot' // <-- если класс в пакете, укажи полный путь, например 'com.example.Bot'
+                'Main-Class': 'Bot' // или 'com.example.Bot' если класс в пакете
         )
     }
 }
 
-// Fat JAR с зависимостями
+// Fat JAR
 task fatJar(type: Jar) {
     archiveBaseName.set('Tg.Bot')
     archiveVersion.set('1.0-SNAPSHOT')
     archiveClassifier.set('all')
-
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     manifest {
         attributes(
-                'Main-Class': 'Bot' // или 'com.example.Bot', если есть пакет
+                'Main-Class': 'Bot' // или полный путь 'com.example.Bot'
         )
     }
 
-    // Берём основной jar
+    // Основной код
     from sourceSets.main.output
 
-    // Добавляем все зависимости
-    dependsOn configurations.runtimeClasspath
+    // Все зависимости
     from {
-        configurations.runtimeClasspath.filter { it.name.endsWith('jar') }.collect { zipTree(it) }
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
-
-    with jar
-}
-
-// Чтобы Railway собирал fatJar первым
-tasks.build {
-    dependsOn fatJar
 }
