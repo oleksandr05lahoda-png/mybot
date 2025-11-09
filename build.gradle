@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+}
+
+group 'com.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.telegram:telegrambots:6.7.0'
+    implementation 'org.telegram:telegrambots-meta:6.7.0'
+}
+
+task fatJar(type: Jar) {
+    group = "build"
+    description = "Builds a fat JAR with all dependencies"
+    manifest {
+        attributes 'Main-Class': 'Bot'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE // <-- эта строчка решает проблему
+    with jar
+}
