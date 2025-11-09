@@ -18,7 +18,7 @@ dependencies {
 jar {
     manifest {
         attributes(
-                'Main-Class': 'Bot' // или 'com.example.Bot' если есть пакет
+                'Main-Class': 'Bot' // <-- если класс в пакете, например com.example, то 'com.example.Bot'
         )
     }
 }
@@ -32,7 +32,7 @@ task fatJar(type: Jar) {
 
     manifest {
         attributes(
-                'Main-Class': 'Bot' // или 'com.example.Bot'
+                'Main-Class': 'Bot' // <-- если есть пакет, полный путь
         )
     }
 
@@ -43,7 +43,7 @@ task fatJar(type: Jar) {
     with jar
 }
 
-// Чтобы Railway всегда собирал fatJar первым
+// Чтобы build всегда собирал fatJar
 tasks.build {
     dependsOn fatJar
 }
