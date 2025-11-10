@@ -29,13 +29,13 @@ public class Bot extends TelegramLongPollingBot {
 
     // ====== Пути к фотографиям в resources ======
     private final Map<String, String> mirrorPhotos = new HashMap<>() {{
-        put("Маорі", "/MAORI.png");
-        put("Веста", "/VESTA.png");
-        put("Мейв", "/MEIV.png");
-        put("Орнамент", "/ORNAMENT.png");
-        put("Пафос", "/PAFOS.png");
-        put("Стеліо", "/STELIO.png");
-        put("Шане", "/SHANE.png");
+        put("Маорі", "/MAORI.jpg");
+        put("Веста", "/VESTA.jpg");
+        put("Мейв", "/MEIV.jpg");
+        put("Орнамент", "/ORNAMENT.jpg");
+        put("Пафос", "/PAFOS.jpg");
+        put("Стеліо", "/STELIO.jpg");
+        put("Шане", "/SHANE.jpg");
     }};
 
     // ====== Пользователи ======
@@ -52,16 +52,19 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "ВАШ_ТОКЕН_БОТА"; // <-- вставь сюда свой токен
+        return "8553399814:AAH8rU8fAXxlhXOHQkq_Uk3SzAx9j19LLzg"; // <-- вставьте сюда токен
     }
 
     public static void main(String[] args) {
         try {
             System.setProperty("file.encoding", "UTF-8");
+            System.out.println("🔹 Starting Bot..."); // видно старт
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
+            System.out.println("🔹 TelegramBotsApi created"); // видно, что API инициализировалось
             botsApi.registerBot(new Bot());
-            System.out.println("✅ Bot started");
+            System.out.println("✅ Bot started"); // видно, что бот успешно зарегистрирован
         } catch (Exception e) {
+            System.err.println("❌ Error starting bot:");
             e.printStackTrace();
         }
     }
@@ -169,9 +172,10 @@ public class Bot extends TelegramLongPollingBot {
         InlineKeyboardButton cart = new InlineKeyboardButton(lang.equals("EN") ? "🛒 Cart" : "🛒 Кошик");
         cart.setCallbackData("cart");
 
+        // ⚡ Исправлено: используем java.util.List явно
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
-        rows.add(List.of(contacts, about));
-        rows.add(List.of(catalog, cart));
+        rows.add(java.util.List.of(contacts, about));
+        rows.add(java.util.List.of(catalog, cart));
 
         InlineKeyboardMarkup kb = new InlineKeyboardMarkup();
         kb.setKeyboard(rows);
@@ -186,7 +190,7 @@ public class Bot extends TelegramLongPollingBot {
         en.setCallbackData("lang_en");
 
         InlineKeyboardMarkup kb = new InlineKeyboardMarkup();
-        kb.setKeyboard(List.of(List.of(ua, en)));
+        kb.setKeyboard(java.util.List.of(java.util.List.of(ua, en)));
         sendMessage(chatId, "🌍 <b>Оберіть мову / Choose language:</b>", kb);
     }
 
@@ -221,7 +225,7 @@ public class Bot extends TelegramLongPollingBot {
                     home.setCallbackData("home");
 
                     InlineKeyboardMarkup kb = new InlineKeyboardMarkup();
-                    kb.setKeyboard(List.of(List.of(add), List.of(home)));
+                    kb.setKeyboard(java.util.List.of(java.util.List.of(add), java.util.List.of(home)));
                     photo.setReplyMarkup(kb);
 
                     execute(photo);
@@ -304,7 +308,7 @@ public class Bot extends TelegramLongPollingBot {
             minus.setCallbackData("minus_" + item);
             InlineKeyboardButton plus = new InlineKeyboardButton("➕");
             plus.setCallbackData("plus_" + item);
-            rows.add(List.of(minus, plus));
+            rows.add(java.util.List.of(minus, plus));
         }
 
         sb.append("\n💰 <b>").append(lang.equals("EN") ? "Total: " : "Разом: ").append(priceFormat.format(total)).append(" zł</b>");
@@ -316,8 +320,8 @@ public class Bot extends TelegramLongPollingBot {
         InlineKeyboardButton home = new InlineKeyboardButton(lang.equals("EN") ? "🏠 Home" : "🏠 На головну");
         home.setCallbackData("home");
 
-        rows.add(List.of(order));
-        rows.add(List.of(clear, home));
+        rows.add(java.util.List.of(order));
+        rows.add(java.util.List.of(clear, home));
 
         InlineKeyboardMarkup kb = new InlineKeyboardMarkup();
         kb.setKeyboard(rows);
@@ -351,10 +355,6 @@ public class Bot extends TelegramLongPollingBot {
     private void logToFile(String message, Exception e) {
         System.err.println(message);
         if (e != null) e.printStackTrace();
-    }
-
-    private static String sanitizeFilename(String s) {
-        return s.replaceAll("[^a-zA-Z0-9-_\\.]", "_");
     }
 
     private static String escapeHtml(String s) {
